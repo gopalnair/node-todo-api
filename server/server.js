@@ -11,13 +11,18 @@ mongoose.connect('mongodb://localhost:27017/TodoApp');
 //Create new Model
 var Todo = mongoose.model('Todo', {
     text: {
-        type:String
+        type:String,
+        required:true,
+        minlength:1,
+        trim:true
     },
     completed: {
-        type: Boolean
+        type: Boolean,
+        default:false
     },
     completedAt:{
-        type: Number
+        type: Number,
+        default:null
     }
 });
 
@@ -35,18 +40,44 @@ var Todo = mongoose.model('Todo', {
 //     });
 
 //Create a new To do with all attributes.
-var newFullToDo = new Todo(
-    {
-        text: 'Complete Exercise',
-        completed:false,
-        completedAt: new Date().getUTCSeconds()
-    }
-);
+// var newFullToDo = new Todo(
+//     {
+//         text: 'Complete Exercise',
+//         completed:false,
+//         completedAt: new Date().getUTCSeconds()
+//     }
+// );
 
-//Save the ToDo document.
-newFullToDo.save()
-    .then((doc) => {
-        console.log('New To do saved : ' , doc);
-    }, (err) => {
-        console.log('Unable to save : ', err);
+// //Save the ToDo document.
+// newFullToDo.save()
+//     .then((doc) => {
+//         console.log('New To do saved : ' , doc);
+//     }, (err) => {
+//         console.log('Unable to save : ', err);
+//     });
+
+
+/******************* Exercise - Create User Model and Create a new User **************/
+var userModel = mongoose.model('User', {
+    email: {
+        type: String,
+        required: true,
+        trim:true,
+        min:1
+    }
+});
+
+var newUser = new userModel({
+    email:'      gopal.nair@gmail.com      '
+});
+
+// var newUser = new userModel({
+//     email:' '
+// });
+//Save the new user, and handle the promise.
+newUser.save()
+    .then((user) => {
+        console.log('New User Created : ' , user);
+    }, (error)=> {
+        console.log('Unable to create new user : ', error)
     });
