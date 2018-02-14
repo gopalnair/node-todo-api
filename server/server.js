@@ -11,16 +11,16 @@ var app = express();
 
 app.use(bodyParser.json());
 
-app.post('/todos', (req, res) => {
-    console.log(req.body);
+app.post('/todos', (req, res) => {      
     var todo = new Todo({
         text: req.body.text
-    })
+    });
 
+    
     todo.save() 
-        .then((doc) => {
-            res.send(doc);
-        }, (error) => {
+        .then((doc) => {            
+            res.send(doc);            
+        }, (error) => {            
             res.status(400);
             res.send(error);
         });
@@ -30,3 +30,6 @@ app.post('/todos', (req, res) => {
 app.listen(3000, () => {
     console.log('Started on Port 3000');
 });
+
+
+module.exports = {app}
