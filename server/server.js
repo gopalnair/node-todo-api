@@ -72,7 +72,7 @@ app.get('/todos/:id', (req, res) => {
 
             //If execution reach here, a valid todo was found. Send back the user.
             //console.log('Valid todo ID received, Valid todo found... returning the todo object');
-            return res.send({todo});
+            return res.send({ todo });
 
 
         }, (error) => {
@@ -101,6 +101,30 @@ app.get('/todos', (req, res) => {
 
 });
 
+
+/************* Delete Operation ****************/
+app.delete('/todos/:id', (req, res) => {
+    //Get the ID
+    var id = req.params.id;
+
+    //Validate if this is a valid ID.
+    if (!ObjectID.isValid(id))
+        return res.status(404).send({});
+
+    Todo.findByIdAndRemove(id)
+        .then((doc) => {
+            if (!doc)
+                return res.status(404).send({});
+
+            return res.send({});
+
+        }) 
+        .catch((error) => {
+            res.status(400).send({ error });
+        })
+
+
+});
 
 
 
