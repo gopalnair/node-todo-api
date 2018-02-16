@@ -50,7 +50,7 @@ app.get('/todos/:id', (req, res) => {
     if (!ObjectID.isValid(req.params.id)) {
         //The object ID that was passed in is invalid. 
         //Return back status 404, along with empty body
-        console.log('Invalid todo ID received... setting status to 404, and returning empty body');
+        //console.log('Invalid todo ID received... setting status to 404, and returning empty body');
         res.status(404);
         return res.send({});
     }
@@ -62,19 +62,19 @@ app.get('/todos/:id', (req, res) => {
             // rather, there will be a null object retured. So, we check if the value in promise resolve (.then()) is null, and if
             // yes, send back 404 response. If found, we send the object itself.
             if (!todo) {
-                console.log('Valid todo ID received, but NO todo with ID found... setting status to 404, and returning empty body');
+                //console.log('Valid todo ID received, but NO todo with ID found... setting status to 404, and returning empty body');
                 res.status(404);
                 return res.send({});
             }
 
             //If execution reach here, a valid todo was found. Send back the user.
-            console.log('Valid todo ID received, Valid todo found... returning the todo object');
-            return res.send(todo);
+            //console.log('Valid todo ID received, Valid todo found... returning the todo object');
+            return res.send({todo});
 
 
         }, (error) => {
             //If an error occured, send back a 400 status with empty body
-            console.log('Valid ID received, but error occured during find operation... setting status to 400, and returning empty body');
+            //console.log('Valid ID received, but error occured during find operation... setting status to 400, and returning empty body');
             res.status(400);
             return res.send({});
         });
