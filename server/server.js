@@ -1,7 +1,7 @@
 
-
-var express = require('express');
-var bodyParser = require('body-parser');
+const _ = require('lodash');
+const express = require('express');
+const bodyParser = require('body-parser');
 
 //Get Object ID -  This is for challenge, and to check if the passed Object ID is valid.
 var { ObjectID } = require('mongodb');
@@ -115,8 +115,8 @@ app.delete('/todos/:id', (req, res) => {
         .then((todo) => {
             if (!todo)
                 return res.status(404).send({});
-                
-            return res.send({todo});
+
+            return res.send({ todo });
 
         })
         .catch((error) => {
@@ -125,6 +125,41 @@ app.delete('/todos/:id', (req, res) => {
 
 
 });
+
+/********************* Update Todo items using PATCH ************/
+app.patch('/todos/:id', (req, res) => {
+    //console.log(req);
+    var id = req.params.id;
+    //Use pick method of lodash to get only attributes we need.
+    var body = _.pick(req.body, ['text', 'completed']);
+
+    //If the object ID is invalid, send back 404, along with empty body.
+    if (!ObjectID.isValid(id))
+        return res.status(404).send({});
+
+
+    if (_.isBoolean(body.completed) && body.completed) {
+        body.completedAt = new Date().getTime();
+    } else {
+        body.completed = false;
+        body.completedAt = null;
+    }
+
+    Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+        .then((todo) => {
+            if (!todo)
+                return res.status(404).send();
+
+            res.send({ todo });
+        })
+        .catch((error) => {
+            res.status(404).send();
+        });
+
+
+
+})
+
 
 
 
