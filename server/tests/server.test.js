@@ -8,7 +8,7 @@ const { ObjectID } = require('mongodb');
 
 const todos = [
     { _id: new ObjectID(), text: 'First test todo' },
-    { _id: new ObjectID(), text: 'Second test todo' }
+    { _id: new ObjectID(), text: 'Second test todo', completed:true, completedAt:333 }
 ];
 
 beforeEach((done) => {
@@ -203,3 +203,42 @@ describe('DELETE /todos/:id', () => {
     });
 
 })
+
+/************* EXERCISE CHALLENGE - Create test case for PATCH ********************/
+describe('PATCH /todo/:id' , () => {
+    it('should update the todo' , (done) => {
+        //Grab ID of first item & update text, set completed true
+        //Make 2 assertions. One fr status = 200, then second custom assertion which:
+        // 1) verifies text that is changed
+        // 2) Verifies completed is set to true
+        // 3) Verifies completedAt is a number.
+        var id = todos[0]._id.toHexString();
+        var text = 'Validate Completed Text';
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({completed:true, text})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.text).toBe(text);
+                expect(res.body.todo.completed).toBe(true);
+                expect(res.body.todo.completedAt).toBeA('number');
+                //done();
+            })  
+            .end(done)
+    });
+
+     it('should clear completed At when todo is not completed' , (done) => {
+        var id = todos[1]._id.toHexString();
+        var text = 'Validate Null for complted set to false'
+        request(app)
+            .patch(`/todos/${id}`)
+            .send({completed:false, text})
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.todo.completed).toBe(false);
+                expect(res.body.todo.completedAt).toNotExist();
+                expect(res.body.todo.text).toBe(text);
+            })
+            .end(done);
+     });
+});

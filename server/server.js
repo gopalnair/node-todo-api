@@ -160,11 +160,32 @@ app.patch('/todos/:id', (req, res) => {
 
 })
 
+/************************************************USERS Operations ****************************/
+//1) POST User --> Create a new user
+app.post('/users', (req, res) => {
+    //Extract email and password from request body using lodash
+    var body = _.pick(req.body, ['email', 'password']);
+
+    //Create a new User object.
+    var user = new User(body);
+
+    //Save the user to database.
+    user.save()
+        .then((user) => {
+            return res.send({ user });
+        })
+        .catch((error) => {
+            return res.status(400).send({error});
+        });
+
+});
+
 
 
 
 app.listen(port, () => {
     console.log(`Started on Port ${port}`);
+
 });
 
 
